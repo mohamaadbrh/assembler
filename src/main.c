@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     char output_path[FILE_NAME_MAX];
     strncpy(output_path, argv[2], FILE_NAME_MAX);
 
-    FILE *input_file = fopen(input_path, "r");
+    FILE* input_file = fopen(input_path, "r");
     if (!input_file)
     {
         fprintf(stderr, "Failed to open the assembly file. Please try again later.");
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 
     // Pass the 'input_file' for the first pass
 
-    FILE *output_file = fopen(output_path, "w");
+    FILE* output_file = fopen(output_path, "w");
     if (!output_file)
     {
         fprintf(stderr, "Failed to open a file for the output. Please try again later.");
@@ -38,6 +38,5 @@ int main(int argc, char **argv)
 
     fclose(input_file);
     fclose(output_file);
-
     return EXIT_SUCCESS;
 }
