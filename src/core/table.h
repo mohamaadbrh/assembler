@@ -9,17 +9,28 @@
 typedef struct Symbol
 {
     char label[LABEL_LENGTH];
-    int32_t used;
+    int32_t isUsed;
     int32_t pc;
 }
 Symbol;
 
-int getLabelHash(const char *label, size_t size);
+typedef struct SymbolTable
+{
+    Symbol* symbols;
+    size_t capacity;
+    size_t count;
+}
+SymbolTable;
 
+int getLabelHash(const char *label, size_t capacity);
+SymbolTable createSymbolTable(size_t capacity);
+void destroySymbolTable(SymbolTable *table);
+
+#define OUT_OF_SPACE -2
 #define INSERT_FAILED -1
-int insertLabel(Symbol *table, size_t size, Symbol value);
+int insertSymbol(SymbolTable *table, Symbol value);
 
 #define NOT_FOUND -1
-int findByLabel(Symbol *table, size_t size, const char *label);
+int findByLabel(SymbolTable *table, const char *label);
 
 #endif
