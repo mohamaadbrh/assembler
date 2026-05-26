@@ -40,9 +40,10 @@ typedef enum InstructionFormat {
     IFormat,
     RFormat,
     JFormat
-};
+}
+FunctionFormat;
 
-enum InstructionFormat getFormat(const InstructionInfo* instruction);
+FunctionFormat getFormat(const Function function);
 InstructionInfo parseLine(const char* line);
 
 #endif

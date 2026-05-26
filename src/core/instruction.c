@@ -122,12 +122,9 @@ static Function parseFunctionName(const char *token)
     return UnknownInstruction;
 }
 
-enum InstructionFormat getFormat(const InstructionInfo* instruction)
+FunctionFormat getFormat(const Function function)
 {
-    if (instruction == NULL) {
-        return UnknownFormat;
-    }
-    switch (instruction->function) {
+    switch (function) {
         case Add:
         case Subtract:
         case SetLessThan:
