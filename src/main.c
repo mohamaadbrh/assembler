@@ -11,11 +11,11 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    char input_path[FILE_NAME_MAX];
-    strncpy(input_path, argv[1], FILE_NAME_MAX);
+    char input_path[BUFFER_MAX];
+    strncpy(input_path, argv[1], BUFFER_MAX);
 
-    char output_path[FILE_NAME_MAX];
-    strncpy(output_path, argv[2], FILE_NAME_MAX);
+    char output_path[BUFFER_MAX];
+    strncpy(output_path, argv[2], BUFFER_MAX);
 
     FILE* input_file = fopen(input_path, "r");
     if (!input_file)
