@@ -7,10 +7,9 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 add_executable(Assembler
     src/main.c
-    src/core/table.h
+    src/procedures.c
     src/core/table.c
     src/core/instruction.c
-    src/core/instruction.h
 )
 
 target_include_directories(Assembler
