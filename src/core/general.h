@@ -16,6 +16,11 @@
 #define NOT_FOUND -1
 
 #define TOTAL_ARGS 3
-#define FILE_NAME_MAX 256
+#define BUFFER_MAX 256
+
+#define ANALYSIS_FAILED -1
+
+typedef uint32_t Word;
+typedef uint8_t Byte;
 
 #endif // GENERAL_H
