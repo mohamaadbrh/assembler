@@ -1,5 +1,4 @@
 #include "instruction.h"
-#include <stddef.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -235,4 +234,22 @@ InstructionInfo parseLine(const char *line)
         }
     }
     return result;
+}
+
+Word generateJFormatMachineCode(Function function, Byte rt)
+{
+    Word opcode = (Word) function;
+    return (opcode << 24) | rt;
+}
+
+Word generateRFormatMachineCode(Function function, Word rd, Word rs, Word rt)
+{
+    Word opcode = (Word) function;
+    return (opcode << 24) | (rs << 20) | (rt << 16) | (rd << 12);
+}
+
+Word generateIFormatMachineCode(Function function, Word rs, Word rt, Word offset)
+{
+    Word opcode = (Word) function;
+    return (opcode << 24) | (rs << 20) | (rt << 16) | offset;
 }

@@ -46,4 +46,8 @@ FunctionFormat;
 FunctionFormat getFormat(const Function function);
 InstructionInfo parseLine(const char* line);
 
+Word generateJFormatMachineCode(Function function, Byte rt);
+Word generateRFormatMachineCode(Function function, Word rd, Word rs, Word rt);
+Word generateIFormatMachineCode(Function function, Word rs, Word rt, Word offset);
+
 #endif
