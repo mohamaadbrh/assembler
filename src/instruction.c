@@ -2,120 +2,77 @@
 #include <string.h>
 #include <ctype.h>
 
-static void copyToken(char *dest, size_t size, const char *src)
+void trim(char *s)
 {
-    if (dest == NULL || size == 0)
-    {
+    if (s == NULL) {
         return;
     }
-
-    if (src == NULL)
-    {
-        dest[0] = '\0';
-        return;
+    size_t start = 0;
+    size_t end = strlen(s);
+    while (isspace(s[start])) {
+        start++;
     }
-
-    strncpy(dest, src, size - 1);
-    dest[size - 1] = '\0';
-}
-
-static void trim(char *s)
-{
-    char *start = s;
-    char *end;
-
-    if (s == NULL)
-    {
-        return;
+    while (end > start && isspace(s[end - 1])) {
+        end--;
     }
-
-    while (*start && isspace((unsigned char)*start))
-    {
-        ++start;
+    size_t len = end - start;
+    for (size_t i = 0; i < len; i++) {
+        s[i] = s[start + i];
     }
-
-    if (start != s)
-    {
-        memmove(s, start, strlen(start) + 1);
-    }
-
-    end = s + strlen(s);
-    while (end > s && isspace((unsigned char)*(end - 1)))
-    {
-        --end;
-    }
-
-    *end = '\0';
+    s[len] = '\0';
 }
 
 static Function parseFunctionName(const char *token)
 {
-    if (strcmp(token, "add") == 0)
-    {
+    if (strcmp(token, "add") == 0) {
         return Add;
     }
-    if (strcmp(token, "sub") == 0)
-    {
+    if (strcmp(token, "sub") == 0) {
         return Subtract;
     }
-    if (strcmp(token, "slt") == 0)
-    {
+    if (strcmp(token, "slt") == 0) {
         return SetLessThan;
     }
-    if (strcmp(token, "or") == 0)
-    {
+    if (strcmp(token, "or") == 0) {
         return Or;
     }
-    if (strcmp(token, "nand") == 0)
-    {
+    if (strcmp(token, "nand") == 0) {
         return Nand;
     }
-    if (strcmp(token, "addi") == 0)
-    {
+    if (strcmp(token, "addi") == 0) {
         return AddImmediate;
     }
-    if (strcmp(token, "slti") == 0)
-    {
+    if (strcmp(token, "slti") == 0) {
         return SetLessThanImmediate;
     }
-    if (strcmp(token, "ori") == 0)
-    {
+    if (strcmp(token, "ori") == 0) {
         return OrImmediate;
     }
-    if (strcmp(token, "lui") == 0)
-    {
+    if (strcmp(token, "lui") == 0) {
         return LoadUpperImmediate;
     }
-    if (strcmp(token, "lw") == 0)
-    {
+    if (strcmp(token, "lw") == 0) {
         return LoadWord;
     }
-    if (strcmp(token, "sw") == 0)
-    {
+    if (strcmp(token, "sw") == 0) {
         return SaveWord;
     }
-    if (strcmp(token, "beq") == 0)
-    {
+    if (strcmp(token, "beq") == 0) {
         return BranchEqual;
     }
-    if (strcmp(token, "jalr") == 0)
-    {
+    if (strcmp(token, "jalr") == 0) {
         return JumpAndLink;
     }
-    if (strcmp(token, "j") == 0)
-    {
+    if (strcmp(token, "j") == 0) {
         return Jump;
     }
-    if (strcmp(token, "halt") == 0)
-    {
+    if (strcmp(token, "halt") == 0) {
         return Halt;
     }
-    if (strcmp(token, ".fill") == 0)
-    {
+    if (strcmp(token, ".fill") == 0) {
         return Fill;
     }
-    if (strcmp(token, ".space") == 0)
-    {
+    if (strcmp(token, ".space") == 0) {
         return Space;
     }
     return UnknownInstruction;
@@ -157,14 +114,13 @@ FunctionFormat getFormat(const Function function)
 
 InstructionInfo parseLine(const char *line)
 {
-    InstructionInfo result;
+    char* tokens[5] = {NULL, NULL, NULL, NULL, NULL};
+    char* commentStart = NULL;
     char buffer[BUFFER_MAX];
-    char *tokens[5] = {NULL, NULL, NULL, NULL, NULL};
-    char *commentStart = NULL;
+    InstructionInfo result;
     size_t tokenCount = 0;
     char *p = NULL;
 
-    memset(&result, 0, sizeof(result));
     result.function = UnknownInstruction;
     result.argumentCount = 0;
     if (line == NULL)
@@ -172,7 +128,7 @@ InstructionInfo parseLine(const char *line)
         return result;
     }
 
-    copyToken(buffer, sizeof(buffer), line);
+    strncpy(buffer, line, BUFFER_MAX);
     {
         char *hash = strchr(buffer, '#');
         commentStart = NULL;
@@ -182,7 +138,7 @@ InstructionInfo parseLine(const char *line)
         }
         if (commentStart != NULL)
         {
-            copyToken(result.comment, sizeof(result.comment), commentStart);
+            strncpy(result.comment, commentStart, COMMENT_LENGTH);
             *commentStart = '\0';
         }
     }
@@ -192,7 +148,7 @@ InstructionInfo parseLine(const char *line)
         return result;
     }
 
-    p = strtok(buffer, " \t,\r\n");
+    p = strtok(buffer, "\t,\r\n");
     while (p != NULL && tokenCount < 5)
     {
         tokens[tokenCount++] = p;
@@ -205,30 +161,23 @@ InstructionInfo parseLine(const char *line)
     }
 
     result.function = parseFunctionName(tokens[0]);
-
     if (result.function != UnknownInstruction)
     {
         for (size_t i = 1; i < tokenCount && result.argumentCount < 3; ++i)
         {
-            copyToken(result.arguments[result.argumentCount],
-                      sizeof(result.arguments[result.argumentCount]),
-                      tokens[i]
-            );
+            strncpy(result.arguments[result.argumentCount], tokens[i], ARGUMENT_LENGTH);
             ++result.argumentCount;
         }
     }
     else
     {
-        copyToken(result.label, sizeof(result.label), tokens[0]);
+        strncpy(result.label, tokens[0], LABEL_LENGTH);
         if (tokenCount >= 2)
         {
             result.function = parseFunctionName(tokens[1]);
             for (size_t i = 2; i < tokenCount && result.argumentCount < 3; ++i)
             {
-                copyToken(result.arguments[result.argumentCount],
-                          sizeof(result.arguments[result.argumentCount]),
-                          tokens[i]
-                );
+                strncpy(result.arguments[result.argumentCount], tokens[i], ARGUMENT_LENGTH);
                 ++result.argumentCount;
             }
         }
