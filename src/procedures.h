@@ -2,8 +2,8 @@
 #define PROCEDURES_H
 
 #include <stdio.h>
-#include "core/table.h"
+#include "table.h"
 
-int analyzeLabels(FILE *file, SymbolTable *table);
+int analyzeLabels(FILE *file, Symbol table[]);
 
 #endif //PROCEDURES_H

@@ -31,13 +31,10 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    SymbolTable table = createSymbolTable(TOTAL_CAPACITY);
-    analyzeLabels(input_file, &table);
+    Symbol table[TOTAL_CAPACITY];
+    analyzeLabels(input_file, table);
     rewind(input_file);
 
-    // Pass the 'output_file' for the output
-
-    destroySymbolTable(&table);
     fclose(input_file);
     fclose(output_file);
 

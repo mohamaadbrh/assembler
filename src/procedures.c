@@ -1,9 +1,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include "procedures.h"
-#include "core/instruction.h"
+#include "instruction.h"
 
-int analyzeLabels(FILE *file, SymbolTable *table)
+int analyzeLabels(FILE *file, Symbol table[])
 {
     size_t pc = 0;
     char buffer[BUFFER_MAX];
