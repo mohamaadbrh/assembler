@@ -22,7 +22,7 @@ void trim(char *s)
     s[len] = '\0';
 }
 
-static Function parseFunctionName(const char *token)
+Function parseFunctionName(const char *token)
 {
     if (strcmp(token, "add") == 0) {
         return Add;
