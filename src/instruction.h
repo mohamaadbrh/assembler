@@ -1,6 +1,6 @@
 #ifndef INSTRUCTION_H
 #define INSTRUCTION_H
-
+#include <stddef.h>
 #include "general.h"
 
 typedef enum Function {
@@ -46,7 +46,7 @@ FunctionFormat;
 FunctionFormat getFormat(const Function function);
 InstructionInfo parseLine(const char* line);
 
-Word generateJFormatMachineCode(Function function, Byte rt);
+Word generateJFormatMachineCode(Function function, Word rt);
 Word generateRFormatMachineCode(Function function, Word rd, Word rs, Word rt);
 Word generateIFormatMachineCode(Function function, Word rs, Word rt, Word offset);
 
