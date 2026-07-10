@@ -5,33 +5,45 @@
 
 int analyzeLabels(FILE *file, Symbol table[])
 {
-    size_t pc = 0;
+    int pc = 0;
     char buffer[BUFFER_MAX];
     while (fgets(buffer, BUFFER_MAX, file) != NULL)
     {
         InstructionInfo info = parseLine(buffer);
+        if (info.function == UnknownInstruction && info.label[0] == '\0')
+        {
+            continue;
+        }
         if (info.label[0] != '\0')
         {
             int position = findByLabel(table, info.label);
             if (position != NOT_FOUND)
             {
-                Symbol symbol;
-                symbol.pc = pc;
-                strncpy(symbol.label, info.label, LABEL_LENGTH);
-                insertSymbol(table, symbol);
+                return ANALYSIS_FAILED;
             }
-            else
+
+            Symbol symbol = {0};
+            symbol.pc = pc;
+            symbol.isUsed = SYMBOL_USED;
+
+            strncpy(symbol.label, info.label, LABEL_LENGTH - 1);
+            symbol.label[LABEL_LENGTH - 1] = '\0';
+
+            if (insertSymbol(table, symbol) < 0)
             {
                 return ANALYSIS_FAILED;
             }
         }
-        else if (info.function == Space)
+
+        if (info.function == Space)
         {
-            Word offset = atoi(info.arguments[0]);
-            if (offset != 0)
+            int count = atoi(info.arguments[0]);
+
+            if (count < 0)
             {
-                pc += offset;
+                return ANALYSIS_FAILED;
             }
+            pc += count;
         }
         else
         {
